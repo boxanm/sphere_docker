@@ -1,0 +1,6 @@
+[submodule "sphere_mapping"]
+	path = sphere_mapping
+	url = git@github.com:norlab-ulaval/sphere_mapping.git
+[submodule "sphere_description"]
+	path = sphere_description
+	url = git@github.com:norlab-ulaval/sphere_description.git
