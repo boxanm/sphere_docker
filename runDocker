@@ -6,7 +6,8 @@ docker run -it --rm \
 	-e DISPLAY=$DISPLAY \
 	-e TERM=xterm-256color \
 	-v /dev/shm:/dev/shm \
-	-p 8765:8765 \
+	-p 8766:8766 \
+	--user user \
 	-v $IMAGE_FOLDER/.docker_history:$DOCKER_HOME/.bash_history \
 	--mount "type=bind,source=${PROJECT_FOLDER}/data,target=${DOCKER_HOME}/data" \
 	$PROJECT_NAME:latest bash

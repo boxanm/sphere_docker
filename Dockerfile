@@ -1,11 +1,16 @@
 FROM humble_base:latest
 
 SHELL ["/bin/bash", "-c"]
+USER root
+
+RUN apt update \
+    && apt install libpcap-dev ros-humble-foxglove-bridge -y
+
 USER user
 
 RUN cd /home/user \
     && source venv/bin/activate \
-    && pip install build numpy pytest wheel
+    && pip install build numpy pytest wheel onshape-to-robot
 
 ## install python bindings for libraries
 
@@ -25,29 +30,27 @@ RUN source /home/user/venv/bin/activate \
 	&& make \
 	&& echo password | sudo -S make install
 
-COPY sphere_description /home/user/ros_ws/src/sphere_description
-COPY sphere_mapping /home/user/ros_ws/src/sphere_mapping
 # mapping
 USER root
 RUN cd /home/user/ros_ws/src \
     && git clone https://github.com/norlab-ulaval/ros_rslidar.git \
+    && git clone https://github.com/norlab-ulaval/sphere_description.git \
+    && git clone https://github.com/norlab-ulaval/sphere_mapping.git \
     && git clone https://github.com/norlab-ulaval/imu_tools.git \
     && cd .. \
     && rosdep update
-RUN apt update \
-    && apt install libpcap-dev ros-humble-foxglove-bridge -y \
-    && cd /home/user/ros_ws/ \
+RUN cd /home/user/ros_ws/ \
     && rosdep install --from-paths src --ignore-src -r -y \
     && chown -R user:user .
 USER user
+
 RUN cd /home/user/ros_ws \
     && source install/setup.sh \
     && source /opt/ros/humble/setup.bash \
     && colcon build --symlink-install
 
-# expose ports for Jupyter notebook
-EXPOSE 9000
-EXPOSE 8080
+COPY api_keys /home/user/api_keys
+RUN echo -e "\nsource $HOME/api_keys\n" >> /home/user/.bashrc
 
 COPY entrypoint.sh /entrypoint.sh
 ENTRYPOINT [ "/entrypoint.sh" ]
