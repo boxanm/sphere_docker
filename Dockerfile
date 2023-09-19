@@ -4,6 +4,7 @@ SHELL ["/bin/bash", "-c"]
 USER root
 
 RUN apt update \
+	&& apt upgrade -y \
     && apt install libpcap-dev ros-humble-foxglove-bridge -y
 
 USER user
@@ -37,6 +38,8 @@ RUN cd /home/user/ros_ws/src \
     && git clone https://github.com/norlab-ulaval/sphere_description.git \
     && git clone https://github.com/norlab-ulaval/sphere_mapping.git \
     && git clone https://github.com/norlab-ulaval/imu_tools.git \
+    && git clone -b ros2 https://github.com/norlab-ulaval/vectornav.git \
+    && git clone https://github.com/norlab-ulaval/norlab_xsens_driver.git \
     && cd .. \
     && rosdep update
 RUN cd /home/user/ros_ws/ \
