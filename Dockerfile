@@ -9,9 +9,11 @@ RUN apt update \
 
 USER user
 
+COPY requirements.txt /home/user/requirements.txt
 RUN cd /home/user \
     && source venv/bin/activate \
-    && pip install build numpy pytest wheel onshape-to-robot
+    && pip install -r requirements.txt \
+    && rm requirements.txt
 
 ## install python bindings for libraries
 

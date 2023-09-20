@@ -1,0 +1,6 @@
+numpy
+build
+pytest
+wheel
+onshape-to-robot
+rosbag-tools
